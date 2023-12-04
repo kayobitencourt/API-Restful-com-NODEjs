@@ -1,7 +1,7 @@
 exports.up = knex => knex.schema.createTable("notes", table => {
   table.increments("id");
   table.text("title");
-  table.text("descriptions");
+  table.text("description");
   table.integer("user_id").references("id").inTable("users");// Estamos dizendo aqui que este id faz referencia ao id dentro da tabela users
 
   table.timestamp("created_at").default(knex.fn.now());
