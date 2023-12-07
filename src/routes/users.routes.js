@@ -1,21 +1,20 @@
 const { Router } = require("express");
-
-const UsersController = require("../controllers/UsersController"); //Importando o usercontrollers
+const multer = require("multer");
+const UsersController = require("../controllers/UsersController");
+const UserAvatarController = require("../controllers/UserAvatarController"); //Importando o usercontrollers
 const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
 const usersRoutes = Router();//Criando uma rota de usuarios
 
-// function myMiddleware(request, response, next) {
-//   console.log(" Voce passou pelo middlewar!");
-
-//   if (!request.body.isAdmin) {
-//     return response.json({ message: "user unauthorized" });
-//   }
-//   next();
-// }
-
+//Config upload de img
+const uploadConfig = require("../configs/upload")
+const upload = multer(uploadConfig.MULTER)
+//
 const usersController = new UsersController();
-// usersRoutes.use(myMiddleware); // Aplicando o middleware para todas as rotas
+const userAvatarController = new UserAvatarController();
+
 usersRoutes.post("/", usersController.create);
 usersRoutes.put("/", ensureAuthenticated, usersController.update);
+usersRoutes.patch("/avatar", ensureAuthenticated, upload.single("avatar"), userAvatarController.update);
+
 
 module.exports = usersRoutes;
