@@ -1,7 +1,7 @@
 const { Router } = require("express");
 
 const UsersController = require("../controllers/UsersController"); //Importando o usercontrollers
-
+const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
 const usersRoutes = Router();//Criando uma rota de usuarios
 
 // function myMiddleware(request, response, next) {
@@ -16,6 +16,6 @@ const usersRoutes = Router();//Criando uma rota de usuarios
 const usersController = new UsersController();
 // usersRoutes.use(myMiddleware); // Aplicando o middleware para todas as rotas
 usersRoutes.post("/", usersController.create);
-usersRoutes.put("/:id", usersController.update);
+usersRoutes.put("/", ensureAuthenticated, usersController.update);
 
 module.exports = usersRoutes;

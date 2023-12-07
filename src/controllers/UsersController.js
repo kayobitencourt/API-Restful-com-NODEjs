@@ -25,10 +25,10 @@ class UsersController {
   }
   async update(request, response) {
     const {name, email, password, old_password} = request.body;//Recebendo os dados do formulario
-    const { id } = request.params;//Recebendo o id do registro
+    const user_id = request.user.id//Recebendo o id do registro
 
     const database = await sqliteConnection();//Conectando ao banco de dados
-    const user = await database.get("SELECT * FROM users WHERE id =(?)", [id]);//Selecionando o usuario pelo id
+    const user = await database.get("SELECT * FROM users WHERE id =(?)", [user_id]);//Selecionando o usuario pelo id
 
     if(!user){
       throw new AppError("User not found", 404); //Se o usuario não for encontrado, retorna um erro
@@ -64,7 +64,7 @@ class UsersController {
     password =? ,
     updated_at = DATETIME('now')
     WHERE id= ?`,
-    [user.name, user.email,user.password, id]
+    [user.name, user.email,user.password, user_id]
     );
     return response.status(200).json()//Retornando o status 200
   };
